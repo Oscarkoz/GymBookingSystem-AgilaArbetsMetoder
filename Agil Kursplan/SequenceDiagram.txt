@@ -1,0 +1,57 @@
+Sekvensdiagram – Boka träningspass
+
+Scenario:
+En inloggad användare bokar ett träningspass via webbapplikationen.
+
+Deltagare:
+- User (Användare)
+- WebClient/Frontend
+- Backend API
+- Database
+
+Sekvens:
+
+1. User → WebClient:
+   Klickar på knappen "Boka" på ett specifikt pass.
+
+2. WebClient → Backend API:
+   HTTP POST /api/bookings
+   Body innehåller:
+     - userId
+     - passId
+
+3. Backend API → Database:
+   Kontrollera:
+     - Finns passet?
+     - Finns lediga platser?
+     - Är användaren redan bokad på passet?
+
+4. Database → Backend API:
+   Returnerar resultat (OK eller felorsak).
+
+5a. [Om bokningen kan genomföras]
+   - Backend API skapar en ny rad i tabellen Bookings.
+   - Backend API uppdaterar antalet lediga platser för passet.
+
+   Backend API → Database:
+     INSERT INTO Bookings (...)
+     UPDATE Pass SET LedigaPlatser = LedigaPlatser - 1
+
+   Database → Backend API:
+     OK
+
+   Backend API → WebClient:
+     HTTP 200 OK + bokningsinformation (t.ex. boknings-id, pass-info)
+
+   WebClient → User:
+     Visar bekräftelsemeddelande: "Din bokning är genomförd"
+     Uppdaterar UI så att passet markeras som bokat.
+
+5b. [Om bokningen INTE kan genomföras]
+   Backend API → WebClient:
+     HTTP 400/409 + felmeddelande (t.ex. "Inga lediga platser" eller "Du är redan bokad")
+
+   WebClient → User:
+     Visar relevant felmeddelande i UI.
+
+Slut på sekvens.

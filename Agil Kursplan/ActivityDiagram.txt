@@ -1,0 +1,46 @@
+Aktivitetsdiagram – Boka träningspass
+
+Syfte:
+Visa flödet när en inloggad användare bokar ett träningspass i Core Gym Clubs bokningssystem.
+
+Flöde:
+
+Start
+  ↓
+"Användare är inloggad och befinner sig på sidan 'Kommande pass'"
+  ↓
+Systemet visar lista över kommande träningspass
+  ↓
+Användaren väljer ett specifikt pass och klickar på "Boka"
+  ↓
+Systemet kontrollerar:
+   - Finns det lediga platser?
+   - Är användaren redan bokad på passet?
+
+   ├─ [Inga lediga platser]
+   │      ↓
+   │   Visa felmeddelande: "Inga lediga platser kvar"
+   │      ↓
+   │   Återgå till passlistan
+   │      ↓
+   │   Slut
+   │
+   ├─ [Användaren är redan bokad]
+   │      ↓
+   │   Visa info: "Du är redan bokad på detta pass"
+   │      ↓
+   │   Återgå till passdetaljer
+   │      ↓
+   │   Slut
+   │
+   └─ [Finns plats och användaren är inte bokad]
+          ↓
+       Reservera plats:
+         - Skapa bokningspost i databasen
+         - Minska antal lediga platser med 1
+          ↓
+       Visa bekräftelse: "Din bokning är registrerad"
+          ↓
+       Visa uppdaterad lista med markerat bokat pass
+          ↓
+Slut
